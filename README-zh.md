@@ -45,6 +45,10 @@ wget -O w2p.sh -q https://git.io/JJvf1 && sudo bash w2p.sh install
 $ git clone https://github.com/wizcas/wsl2proxy.git
 $ cd wsl2proxy
 
+### 在脚本32行修改为本机局域网ip
+```
+host=192.168.1.22
+```
 # 中文版
 $ sudo bash ./wsl2proxy-zh install
 # 英文版
