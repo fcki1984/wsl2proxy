@@ -28,8 +28,8 @@ socks="${HOME}/socksproxy"
 varsfile="${HOME}/wsl2proxy.vars"
 cmd="wsl2proxy"
 
-# 从WSL的DNS配置中解析当前Windows主机的访问IP，因为每次重启都会变
-host=$(cat /etc/resolv.conf | sed -n 's/^nameserver\W\(.*\)$/\1/p')
+# 设置为windows的局域网ip，如192.168.1.22
+host=windows局域网ip
 
 # 让用户选择代理用什么协议
 selectProtocol() {
