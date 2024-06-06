@@ -44,11 +44,6 @@ wget -O w2p.sh -q https://git.io/JJvf1 && sudo bash w2p.sh install
 
 $ git clone https://github.com/wizcas/wsl2proxy.git
 $ cd wsl2proxy
-
-### 在脚本32行修改为本机局域网ip
-```
-host=192.168.1.22
-```
 # 中文版
 $ sudo bash ./wsl2proxy-zh install
 # 英文版
@@ -60,10 +55,10 @@ $ sudo bash ./wsl2proxy-en install
 
 在激活 WSL2Proxy 之前，必须首先进行代理服务器的相关设置，包括：
 
+-    局域网IP
 -   代理协议
 -   代理端口
 
-你不用设置代理服务器的 IP 地址，因为 WSL2Proxy 会自动获取！
 
 执行下面的命令进行代理服务器的设置：
 
