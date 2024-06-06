@@ -8,25 +8,7 @@ connections.
 
 # Why This Repo
 
-The WSL2 is currently unable to access ports listened by Windows programs via
-`localhost`. Instead, programs in WSL2 have to connect to a dynamic IP address
-assigned automatically and changes everytime your compute reboots.
-
-This is quite annoying.
-
-The scripts here fetches the latest Windows IP on WSL2's startup (or anytime you
-prefer) once properly setup, and assign the IP & port to:
-
--   `http_proxy` environment variable
--   `https_proxy` environment variable
--   `http.proxy` in `.gitconfig`
--   `https.proxy` in `.gitconfig`
--   `core.gitproxy` in `.gitconfig`
--   a helper executable script named `socksproxy`, which essentially calls the `nc`
-    command for proxying SSH connections.
-
-Once Microsft addresses the issue, there should be no more use of these scripts.
-
+If the proxy IP is fixed, you can set the boot self -starting, otherwise each proxy IP changes, you need to run `$ wsl2proxy setup` again
 # How To Use
 
 ## Installation
