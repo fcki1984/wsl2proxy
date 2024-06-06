@@ -28,12 +28,22 @@ socks="${HOME}/socksproxy"
 varsfile="${HOME}/wsl2proxy.vars"
 cmd="wsl2proxy"
 
-# 设置为windows的局域网ip，如192.168.1.22
-host=windows局域网ip
+# 手动输入 Windows 的局域网 IP 地址
+inputHost() {
+  echo -e "\n${YELLOW}[STEP 1]${BLUE} 请输入 Windows 的局域网 IP 地址: ${RAW}"
+  while true; do
+    read -p "Host > " host
+    if [ -z "${host}" ]; then
+      colorEcho ${RED} "IP 地址不能为空"
+    else
+      break
+    fi
+  done
+}
 
 # 让用户选择代理用什么协议
 selectProtocol() {
-  echo -e "\n${YELLOW}[STEP 1]${BLUE} 代理协议: ${RAW}\n---- 请选择数字 ----"
+  echo -e "\n${YELLOW}[STEP 2]${BLUE} 代理协议: ${RAW}\n---- 请选择数字 ----"
   PROTOCOLS=("http" "https" "socks5" "socks4")
   PS3="-----------------
 Protocol > "
@@ -58,9 +68,9 @@ Protocol > "
   done
 }
 
-# Let user input the proxy server port
+# 让用户输入代理服务器端口
 inputPort() {
-  echo -e "\n${YELLOW}[STEP 2]${BLUE} 代理端口: ${RAW}"
+  echo -e "\n${YELLOW}[STEP 3]${BLUE} 代理端口: ${RAW}"
   while true; do
     read -p "Port > " port
     if [ -z ${port} ]; then
@@ -75,7 +85,7 @@ inputPort() {
   done
 }
 
-# Save configs into a conf file
+# 保存配置到文件
 saveConf() {
   echo "# This file is for storaging WSL proxy settings.
 # The host IP is not recorded since it changes every time on reboot.
@@ -90,8 +100,7 @@ port=${port}
 "
 }
 
-# Since SSH proxy depends on `nc` tool for forwarding,
-# this function checks the prerequisite
+# 检查nc命令
 checkNc() {
   command -v nc >/dev/null
   nc=$?
@@ -100,7 +109,7 @@ checkNc() {
   fi
 }
 
-# Create a utility for calling nc to forward network traffics
+# 创建用于调用nc转发网络流量的实用工具
 setupSocksProxy() {
   updateSocksProxy
 
@@ -111,7 +120,7 @@ ${RED}[需要手动设置]${RAW}
 已创建网络请求转发脚本${YELLOW}${socks}${RAW}，
 请进行如下配置，以便正常使用SSH代理与git通信：
 
-1) 新建或编辑文件${YELLOW}~/.ssh/config\e${RAW}，并写入类似下面的内容：
+1) 新建或编辑文件${YELLOW}~/.ssh/config${RAW}，并写入类似下面的内容：
    (你可能需要首先给该文件可写权限)
 ${TEAL}
 Host github.com
@@ -126,15 +135,16 @@ ${RAW}
 }
 
 updateSocksProxy() {
-  # Makes the proxy command
+  # 创建代理命令
   echo "#!/bin/bash
 nc -x ${host}:${port} -X ${ncProtocol} \$*
 " >${socks}
   chmod +x ${socks}
 }
 
-# The `setup` command's handler
+# `setup`命令的处理函数
 setup() {
+  inputHost
   selectProtocol
   inputPort
   echo -e "你的代理服务器是: ${TEAL}${protocol}://${host}:${port}${RAW}"
@@ -170,7 +180,7 @@ ${YELLOW}http_proxy, https_proxy${RAW}和${YELLOW}.gitconfig${RAW}上
 "
 }
 
-# Load proxy settings from our config file. Throws an error message if not found.
+# 从配置文件加载代理设置。如果未找到，则抛出错误消息。
 loadConf() {
   if [ ! -f "${conf}" ]; then
     colorEcho ${RED} "
@@ -183,7 +193,7 @@ ${RAW}用法:    ${cmd} setup"
   url="${protocol}://${host}:${port}"
 }
 
-# Determine what's the shell's profile script
+# 确定shell的配置脚本
 getProfile() {
   if [ -n "$($SHELL -c 'echo $ZSH_VERSION')" ]; then
     # assume Zsh
@@ -197,7 +207,7 @@ getProfile() {
   fi
 }
 
-# The `on` command's handler
+# `on`命令的处理函数
 on() {
   loadConf
   echo -e "正在配置代理服务器 ${YELLOW}${url}${RAW}"
@@ -207,17 +217,17 @@ on() {
   updateSocksProxy
 }
 
-# Set the proxy settings for git
+# 为git设置代理配置
 applyGit() {
-  # For HTTP/HTTPS protocol
+  # 对HTTP/HTTPS协议
   git config --global http.proxy $1
   git config --global https.proxy $1
-  # For git:// protocol
+  # 对git://协议
   git config --global core.gitproxy ${socks}
   echo "✔️️ git设置完毕"
 }
 
-# Unset all proxy settings
+# 取消所有代理设置
 off() {
   unset http_proxy
   unset https_proxy
@@ -234,7 +244,7 @@ ${RAW}
 "
 }
 
-# Print the help info
+# 打印帮助信息
 help() {
   echo -e "
 WSL代理服务器配置工具
@@ -261,7 +271,7 @@ Commands:
 "
 }
 
-# installs the script to /usr/local/bin
+# 将脚本安装到 /usr/local/bin
 install() {
   if [ "$EUID" -ne 0 ]; then
     colorEcho ${RED} "
@@ -280,7 +290,7 @@ install() {
   "
 }
 
-# Main entry of the bash script
+# 脚本的主入口
 case $1 in
 install)
   install
