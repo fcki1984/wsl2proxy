@@ -88,15 +88,15 @@ inputPort() {
 # 保存配置到文件
 saveConf() {
   echo "# This file is for storaging WSL proxy settings.
-# The host IP is not recorded since it changes every time on reboot.
 
 protocol=${protocol}
 ncProtocol=${ncProtocol}
 port=${port}
-  " >${conf}
+host=${host}
+  " > ${conf}
 
   colorEcho ${GREEN} "
-代理配置已成功存储到 ${YELLOW}${conf}${GREEN}, 请不要删除。
+代理配置已成功存储到 ${YELLOW}${conf}${GREEN}，请不要删除。
 "
 }
 
