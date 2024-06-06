@@ -3,22 +3,7 @@
 本仓库中的 Bash 脚本用于配置 WSL2 环境，以便让 http、https 连接和 git 客户端能够正确访问 Windows 下的代理服务器。
 
 # 适用场景
-
-WSL2 目前不能够直接通过`localhost`访问本地的 Windows 网络服务。相反，Windows 会为 WSL2 分配一个动态 IP，
-而 WSL2 下的程序则必须用这个动态 IP 访问 Windows 中监听的端口。
-
-更烦人的是，这个 IP 每次重启电脑都会变。
-
-所以我写了这些脚本，让 WSL2 在启动时可以自动获取 Windows IP（或手动执行），并将 IP 和代理服务器端口应用到：
-
--   `http_proxy` 环境变量
--   `https_proxy` 环境变量
--   `.gitconfig`里的`http.proxy`
--   `.gitconfig`里的`https.proxy`
--   `.gitconfig`里的`core.gitproxy`
--   一个名为`socksproxy`的用于进行 SSH 代理的辅助脚本。其实就是包装了一下`nc`命令的调用。
-
-一旦微软解决了这个问题，这些脚本应该就没用了。
+如果局域网ip固定，可以设置自启动，否则每次局域网ip发生变化，都需要再次运行`wsl2proxy setup`
 
 # 如何使用
 
@@ -55,7 +40,7 @@ $ sudo bash ./wsl2proxy-en install
 
 在激活 WSL2Proxy 之前，必须首先进行代理服务器的相关设置，包括：
 
--    局域网IP
+-   局域网IP
 -   代理协议
 -   代理端口
 
