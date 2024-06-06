@@ -29,7 +29,17 @@ varsfile="${HOME}/wsl2proxy.vars"
 cmd="wsl2proxy"
 
 # Extract the IP of Windows host, which is generated automatically
-host=$(cat /etc/resolv.conf | sed -n 's/^nameserver\W\(.*\)$/\1/p')
+inputHost() {
+  echo -e "\n${YELLOW}[STEP 1]${BLUE} Please enter the local area network IP address of Windows: ${RAW}"
+  while true; do
+    read -p "Host > " host
+    if [ -z "${host}" ]; then
+      colorEcho ${RED} "IP address cannot be empty"
+    else
+      break
+    fi
+  done
+}
 
 # Let user select from options for proxy protocol
 selectProtocol() {
@@ -78,10 +88,10 @@ inputPort() {
 # Save configs into a conf file
 saveConf() {
   echo "# This file is for storaging WSL proxy settings.
-# The host IP is not recorded since it changes every time on reboot.
 
 protocol=${protocol}
 ncProtocol=${ncProtocol}
+host=${host}
 port=${port}
   " >${conf}
 
