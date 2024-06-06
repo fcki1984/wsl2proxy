@@ -3,7 +3,7 @@
 本仓库中的 Bash 脚本用于配置 WSL2 环境，以便让 http、https 连接和 git 客户端能够正确访问 Windows 下的代理服务器。
 
 # 适用场景
-如果代理ip固定，可以设置自启动，否则每次代理ip发生变化，都需要再次运行`wsl2proxy setup`
+如果代理ip固定，可以设置自启动，否则每次代理ip发生变化，都需要再次运行`$ wsl2proxy setup`
 
 # 如何使用
 
